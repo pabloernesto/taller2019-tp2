@@ -1,0 +1,14 @@
+*.o
+tp
+.vscode
+
+test_*
+!test_*.sh
+!test_*.c
+!test_*.cpp
+!test_*.h
+
+aux_test_*
+!aux_test_*.c
+!aux_test_*.cpp
+!aux_test_*.h
