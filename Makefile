@@ -131,7 +131,7 @@ endif
 # REGLAS
 #########
 
-.PHONY: all clean lint
+.PHONY: all clean lint test
 
 all: $(target)
 
@@ -152,3 +152,6 @@ clean:
 lint:
 	# En una sola linea para que ejecute el script en el subdirectorio
 	cd cpplint; ./execute.sh
+
+test: all
+	./run_acceptance_tests.sh
