@@ -22,7 +22,7 @@ extension = cpp
 #math = si
 
 # Si usa threads, descomentar (quitar el '#' a) la siguiente línea.
-#threads = si
+threads = si
 
 # Si es un programa GTK+, descomentar (quitar el '#' a) la siguiente línea.
 #gtk = si
