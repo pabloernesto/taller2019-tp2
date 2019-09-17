@@ -8,11 +8,15 @@ void do_work(
   BlockingQueue& output_queue,
   WorkerContext& ctx)
 {
-  if (ctx.input.peek() == EOF) return;
+  if (ctx.input.peek() == EOF) {
+    output_queue.close();
+    return;
+  }
   Record r(1, 4);
   r.reference = htobe32(0);
   r.samples[0] = 0x50;
   output_queue.push(std::move(r));
+  output_queue.close();
 }
 
 BlockingQueue::BlockingQueue(int size)

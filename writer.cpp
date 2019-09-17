@@ -6,7 +6,12 @@ void do_write(
   std::ofstream& output,
   std::vector<BlockingQueue> &queues)
 {
-  const char out[] = { 0x00, 0x00, 0x00, 0x00, 0x01, 0x50 };
-  output.write(out, 6);
+  Record r = queues[0].pop();
+  output.write((char *) &r.reference, 4);
+  output.write((char *) &r.sample_size_bits, 1);
+  // n = 4
+  const int nbits = r.sample_size_bits * 4;
+  const int nbytes = nbits / 8 + (nbits % 8 ? 1 : 0);
+  output.write((char *) r.samples, nbytes);
   output.close();
 }
