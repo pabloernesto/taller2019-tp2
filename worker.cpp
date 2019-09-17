@@ -15,7 +15,13 @@ void do_work(
   output_queue.push(std::move(r));
 }
 
-BlockingQueue::BlockingQueue(int size) : mtx(), cv(), q(), max_size(size), closed(false) {}
+BlockingQueue::BlockingQueue(int size)
+  : mtx(new std::mutex),
+  cv(new std::condition_variable),
+  q(),
+  max_size(size),
+  closed(false)
+{}
 
 BlockingQueue::BlockingQueue(BlockingQueue&& other)
   : mtx(other.mtx),
@@ -29,8 +35,10 @@ BlockingQueue::BlockingQueue(BlockingQueue&& other)
 }
 
 BlockingQueue& BlockingQueue::operator=(BlockingQueue&& other) {
-  this->mtx = std::move(other.mtx);
-  this->cv = std::move(other.cv);
+  this->mtx = other.mtx;
+  other.mtx = nullptr;
+  this->cv = other.cv;
+  other.cv = nullptr;
   this->q = std::move(other.q);
   this->max_size = other.max_size;
   return *this;
