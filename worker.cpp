@@ -44,6 +44,11 @@ BlockingQueue& BlockingQueue::operator=(BlockingQueue&& other) {
   return *this;
 }
 
+BlockingQueue::~BlockingQueue() {
+  if (this->mtx) delete(this->mtx);
+  if (this->cv) delete(this->cv);
+}
+
 void BlockingQueue::push(Record&& x) {
   std::unique_lock<std::mutex> lock(*mtx);
   q.push(std::move(x));

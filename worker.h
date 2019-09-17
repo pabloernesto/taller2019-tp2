@@ -49,6 +49,7 @@ class BlockingQueue {
 
   public:
   explicit BlockingQueue(int size);
+  ~BlockingQueue();
 
   // Non-copyable
   BlockingQueue(const BlockingQueue&) = delete;
