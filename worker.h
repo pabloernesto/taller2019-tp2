@@ -22,7 +22,7 @@ struct Record {
     : reference(0),
       sample_size_bits(sample_size_bits),
       samples(new char[sample_size_bits*n/8]) {}
-  ~Record() { if (samples) free(samples); }
+  ~Record() { if (samples) delete samples; }
 
   // Move constructor
   Record(Record&& other)
