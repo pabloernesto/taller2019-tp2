@@ -45,6 +45,7 @@ class BlockingQueue {
   std::condition_variable *cv;
   std::queue<Record> q;
   int max_size;
+  bool closed;
 
   public:
   explicit BlockingQueue(int size);
@@ -60,7 +61,6 @@ class BlockingQueue {
   void push(Record&& x);
   Record&& pop();
   void close();
-  bool empty();
 };
 
 struct WorkerContext {
