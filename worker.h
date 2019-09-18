@@ -61,7 +61,7 @@ class BlockingQueue {
   BlockingQueue& operator=(BlockingQueue&& other);
 
   void push(Record&& x);
-  Record&& pop();
+  Record pop();
   void close();
   bool isClosed();
 };

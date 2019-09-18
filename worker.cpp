@@ -60,7 +60,7 @@ void BlockingQueue::push(Record&& x) {
   cv->notify_one();
 }
 
-Record&& BlockingQueue::pop() {
+Record BlockingQueue::pop() {
   std::unique_lock<std::mutex> lock(*mtx);
   while (q.size() == 0 && !closed)
     cv->wait(lock);
@@ -68,7 +68,7 @@ Record&& BlockingQueue::pop() {
   Record result = std::move(q.front());
   q.pop();
   cv->notify_one();
-  return std::move(result);
+  return result;
 }
 
 void BlockingQueue::close() {

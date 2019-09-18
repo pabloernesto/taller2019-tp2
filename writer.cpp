@@ -7,7 +7,7 @@ void do_write(
   std::vector<BlockingQueue> &queues)
 {
   while (!queues[0].isClosed()) {
-    Record r = queues[0].pop();
+    Record&& r = queues[0].pop();
     output.write((char *) &r.reference, 4);
     output.write((char *) &r.sample_size_bits, 1);
     // n = 4
