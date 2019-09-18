@@ -78,5 +78,7 @@ void BlockingQueue::close() {
 }
 
 bool BlockingQueue::isClosed() {
-  return true;
+  std::unique_lock<std::mutex> lock(*mtx);
+  cv->notify_one();
+  return (q.size() == 0) && closed;
 }
