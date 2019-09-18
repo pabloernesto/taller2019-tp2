@@ -14,8 +14,8 @@ int main(int argc, char **argv) {
   std::ofstream output(argv[5], std::ios::out | std::ios::binary);
   if (!output) return 1;
 
-  const int t = 1;
-  const int q = 10;
+  const int T = 1;
+  const int Q = 10;
 
   std::condition_variable cv;
   std::mutex mtx;
@@ -24,8 +24,8 @@ int main(int argc, char **argv) {
   // Create worker threads and output queues
   std::vector<BlockingQueue> queues;
   std::vector<std::thread> workers;
-  for (int i = 0; i < t; i++) {
-    queues.emplace_back(q);
+  for (int i = 0; i < T; i++) {
+    queues.emplace_back(Q);
     workers.emplace_back(do_work, i, std::ref(queues), std::ref(ctx));
   }
 
@@ -33,6 +33,6 @@ int main(int argc, char **argv) {
   std::thread writer(do_write, std::ref(output), std::ref(queues));
 
   // Join all threads
-  for (auto& t : workers) t.join();
+  for (auto& T : workers) T.join();
   writer.join();
 }
