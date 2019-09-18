@@ -63,6 +63,7 @@ class BlockingQueue {
   void push(Record&& x);
   Record&& pop();
   void close();
+  bool isClosed();
 };
 
 struct WorkerContext {

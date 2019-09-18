@@ -76,3 +76,7 @@ void BlockingQueue::close() {
   closed = true;
   cv->notify_one();
 }
+
+bool BlockingQueue::isClosed() {
+  return true;
+}
