@@ -22,7 +22,7 @@ extension = cpp
 #math = si
 
 # Si usa threads, descomentar (quitar el '#' a) la siguiente línea.
-#threads = si
+threads = si
 
 # Si es un programa GTK+, descomentar (quitar el '#' a) la siguiente línea.
 #gtk = si
@@ -40,8 +40,8 @@ extension = cpp
 # Opciones para el compilador C/C++ para tratamiento de errores y warnings.
 CFLAGS = -Wall -Werror -pedantic -pedantic-errors
 
-# Para optimizar el binario resultante lo mejor posible
-CFLAGS += -O3
+# Nivel de optimizacion del binario
+CFLAGS += -O0
 
 # Para valgrind o debug
 CFLAGS += -ggdb -DDEBUG -fno-inline
