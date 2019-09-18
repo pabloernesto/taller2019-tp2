@@ -5,6 +5,7 @@
 #include <mutex>
 #include <condition_variable>
 #include <queue>
+#include <vector>
 
 struct Record {
   unsigned int reference;
@@ -72,7 +73,7 @@ struct WorkerContext {
 
 void do_work(
   int thread_id,
-  BlockingQueue& output_queue,
+  std::vector<BlockingQueue>& output_queue,
   WorkerContext& ctx);
 
 #endif // WORKER_H_

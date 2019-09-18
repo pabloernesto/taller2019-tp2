@@ -26,7 +26,7 @@ int main(int argc, char **argv) {
   std::vector<std::thread> workers;
   for (int i = 0; i < t; i++) {
     queues.emplace_back(q);
-    workers.emplace_back(do_work, i, std::ref(queues[i]), std::ref(ctx));
+    workers.emplace_back(do_work, i, std::ref(queues), std::ref(ctx));
   }
 
   // Create writer thread

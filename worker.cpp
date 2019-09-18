@@ -2,21 +2,22 @@
 
 #include <fstream>
 #include <endian.h>
+#include <vector>
 
 void do_work(
   int thread_id,
-  BlockingQueue& output_queue,
+  std::vector<BlockingQueue>& output_queue,
   WorkerContext& ctx)
 {
   if (ctx.input.peek() == EOF) {
-    output_queue.close();
+    output_queue[thread_id].close();
     return;
   }
   Record r(1, 4);
   r.reference = htobe32(0);
   r.samples[0] = 0x50;
-  output_queue.push(std::move(r));
-  output_queue.close();
+  output_queue[thread_id].push(std::move(r));
+  output_queue[thread_id].close();
 }
 
 BlockingQueue::BlockingQueue(int size)
