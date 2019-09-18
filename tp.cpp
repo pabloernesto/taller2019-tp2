@@ -4,6 +4,7 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <string>
 
 int main(int argc, char **argv) {
   if (argc == 1) return 1;
@@ -14,12 +15,13 @@ int main(int argc, char **argv) {
   std::ofstream output(argv[5], std::ios::out | std::ios::binary);
   if (!output) return 1;
 
+  const int N = std::stol(argv[1]);
   const int T = 1;
-  const int Q = 10;
+  const int Q = std::stol(argv[3]);
 
   std::condition_variable cv;
   std::mutex mtx;
-  struct WorkerContext ctx = { cv, mtx, input };
+  struct WorkerContext ctx = { cv, mtx, input, N };
 
   // Create worker threads and output queues
   std::vector<BlockingQueue> queues;

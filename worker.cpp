@@ -13,7 +13,7 @@ void do_work(
     output_queue[thread_id].close();
     return;
   }
-  Record r(1, 4);
+  Record r(1, ctx.N);
   r.reference = htobe32(0);
   r.samples[0] = 0x50;
   output_queue[thread_id].push(std::move(r));

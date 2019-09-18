@@ -70,6 +70,7 @@ struct WorkerContext {
   std::condition_variable& cv;
   std::mutex& lock;
   std::ifstream& input;
+  int N;
 };
 
 void do_work(
