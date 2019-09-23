@@ -7,9 +7,12 @@
 #include <queue>
 #include <vector>
 
-struct Record {
-  unsigned int reference;
+class Record {
+  int used_bits;
+
+  public:
   unsigned char sample_size_bits;
+  unsigned int reference;
   char *samples;
 
   // Non-copyable
@@ -20,25 +23,30 @@ struct Record {
   Record() = delete;
 
   Record(int sample_size_bits, int n)
-    : reference(0),
+    : used_bits(0),
       sample_size_bits(sample_size_bits),
+      reference(0),
       samples(new char[sample_size_bits*n/8]) {}
   ~Record() { if (samples) delete samples; }
 
   // Move constructor
   Record(Record&& other)
-    : reference(other.reference),
+    : used_bits(other.used_bits),
       sample_size_bits(other.sample_size_bits),
+      reference(other.reference),
       samples(other.samples) { other.samples = nullptr; }
 
   // Move assignment
   Record& operator=(Record&& other) {
+    this->used_bits = other.used_bits;
     this->reference = other.reference;
     this->sample_size_bits = other.sample_size_bits;
     this->samples = other.samples;
     other.samples = nullptr;
     return *this;
   }
+
+  void push_sample(uint32_t s);
 };
 
 class BlockingQueue {
