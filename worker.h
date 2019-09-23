@@ -46,6 +46,7 @@ class Record {
     return *this;
   }
 
+  // Append a (compressed) sample to the record
   void push_sample(uint32_t s);
 };
 
