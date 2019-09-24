@@ -39,8 +39,8 @@ void do_work(
     [](uint32_t num){ return be32toh(num); });
 
   // find reference point (minimum of all samples)
-  const uint32_t reference = std::accumulate(samples.begin(), samples.end(), 0,
-    [](int a, int b){ return std::min(a, b); });
+  const uint32_t reference = std::accumulate(samples.begin(), samples.end(),
+    samples[0], [](int a, int b){ return std::min(a, b); });
 
   // normalize
   std::transform(samples.begin(), samples.end(), samples.begin(),
@@ -57,7 +57,7 @@ void do_work(
 
   // create record
   Record r(max_bits, ctx.N);
-  r.reference = reference;
+  r.reference = htobe32(reference);
 
   // load samples
   for (auto s : samples) r.push_sample(s);
