@@ -117,8 +117,10 @@ void BlockingQueue::push(Record&& x) {
 
 Record BlockingQueue::pop() {
   std::unique_lock<std::mutex> lock(*mtx);
-  while (q.size() == 0 && !closed)
+  while ((q.size() == 0) && !closed)
     cv->wait(lock);
+
+  if (q.size() == 0) throw std::runtime_error("trying to pop an empty queue");
 
   Record result = std::move(q.front());
   q.pop();
@@ -134,6 +136,9 @@ void BlockingQueue::close() {
 
 bool BlockingQueue::isClosed() {
   std::unique_lock<std::mutex> lock(*mtx);
+  while ((q.size() == 0) && !closed)
+    cv->wait(lock);
+
   cv->notify_one();
   return (q.size() == 0) && closed;
 }
