@@ -21,49 +21,46 @@ void do_work(
   std::vector<BlockingQueue>& output_queue,
   WorkerContext& ctx)
 {
-  if (ctx.input.peek() == EOF) {
-    output_queue[thread_id].close();
-    return;
+  while (ctx.input.peek() != EOF) {
+    // collect samples
+    std::vector<uint32_t> samples;
+    for (int i = 0; i < ctx.N; i++) {
+      uint32_t s;
+      ctx.input.read((char*) &s, sizeof(s));
+      samples.push_back(s);
+    }
+
+    // change to little endian
+    std::transform(samples.begin(), samples.end(), samples.begin(),
+      [](uint32_t num){ return be32toh(num); });
+
+    // find reference point (minimum of all samples)
+    const uint32_t reference = std::accumulate(samples.begin(), samples.end(),
+      samples[0], [](uint32_t a, uint32_t b){ return std::min(a, b); });
+
+    // normalize
+    std::transform(samples.begin(), samples.end(), samples.begin(),
+      [reference](uint32_t num){ return num - reference; });
+
+    // find length in bits
+    std::vector<int> bit_lengths(samples.size());
+    std::transform(samples.begin(), samples.end(), bit_lengths.begin(),
+      [](uint32_t num){ return fls(num); });
+
+    // find max length
+    const uint32_t max_bits = std::accumulate(bit_lengths.begin(),
+      bit_lengths.end(), 0, [](int a, int b){ return std::max(a, b); });
+
+    // create record
+    Record r(max_bits, ctx.N);
+    r.reference = htobe32(reference);
+
+    // load samples
+    for (auto s : samples) r.push_sample(s);
+
+    // push record into queue
+    output_queue[thread_id].push(std::move(r));
   }
-
-  // collect samples
-  std::vector<uint32_t> samples;
-  for (int i = 0; i < ctx.N; i++) {
-    uint32_t s;
-    ctx.input.read((char*) &s, sizeof(s));
-    samples.push_back(s);
-  }
-
-  // change to little endian
-  std::transform(samples.begin(), samples.end(), samples.begin(),
-    [](uint32_t num){ return be32toh(num); });
-
-  // find reference point (minimum of all samples)
-  const uint32_t reference = std::accumulate(samples.begin(), samples.end(),
-    samples[0], [](uint32_t a, uint32_t b){ return std::min(a, b); });
-
-  // normalize
-  std::transform(samples.begin(), samples.end(), samples.begin(),
-    [reference](uint32_t num){ return num - reference; });
-
-  // find length in bits
-  std::vector<int> bit_lengths(samples.size());
-  std::transform(samples.begin(), samples.end(), bit_lengths.begin(),
-    [](uint32_t num){ return fls(num); });
-
-  // find max length
-  const uint32_t max_bits = std::accumulate(bit_lengths.begin(),
-    bit_lengths.end(), 0, [](int a, int b){ return std::max(a, b); });
-
-  // create record
-  Record r(max_bits, ctx.N);
-  r.reference = htobe32(reference);
-
-  // load samples
-  for (auto s : samples) r.push_sample(s);
-
-  // push record into queue
-  output_queue[thread_id].push(std::move(r));
   output_queue[thread_id].close();
 }
 
