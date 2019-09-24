@@ -14,7 +14,7 @@
 // Copied (with minor stilistic adaptations) from the freeBSD
 //   implementation at:
 //   https://github.com/freebsd/freebsd/blob/master/sys/libkern/fls.c
-static int fls(int i);
+static int fls(uint32_t i);
 
 void do_work(
   int thread_id,
@@ -40,7 +40,7 @@ void do_work(
 
   // find reference point (minimum of all samples)
   const uint32_t reference = std::accumulate(samples.begin(), samples.end(),
-    samples[0], [](int a, int b){ return std::min(a, b); });
+    samples[0], [](uint32_t a, uint32_t b){ return std::min(a, b); });
 
   // normalize
   std::transform(samples.begin(), samples.end(), samples.begin(),
@@ -67,7 +67,7 @@ void do_work(
   output_queue[thread_id].close();
 }
 
-static int fls(int i) {
+static int fls(uint32_t i) {
   if (!i) return 0;
 
   int bit;
