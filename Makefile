@@ -111,6 +111,7 @@ LD = $(CXX)
 endif
 
 # Si no especifica archivos, tomo todos.
+headers ?= $(filter-out minunit.h, $(wildcard *.h))
 fuentes ?= $(wildcard *.$(extension))
 directorios = $(shell find . -type d -regex '.*\w+')
 
@@ -131,7 +132,7 @@ endif
 # REGLAS
 #########
 
-.PHONY: all clean lint test
+.PHONY: all clean lint test zip
 
 all: $(target)
 
@@ -147,7 +148,7 @@ $(target): $(o_files)
 	$(LD) $(o_files) -o $(target) $(LDFLAGS)
 
 clean:
-	$(RM) $(o_files) $(target)
+	$(RM) $(o_files) $(target) entrega.zip
 
 lint:
 	# En una sola linea para que ejecute el script en el subdirectorio
@@ -155,3 +156,8 @@ lint:
 
 test: all
 	./run_acceptance_tests.sh
+
+zip: entrega.zip
+
+entrega.zip: $(fuentes) $(headers)
+	zip entrega $^
