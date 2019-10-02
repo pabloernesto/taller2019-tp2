@@ -1,37 +1,11 @@
 #ifndef WORKER_H_
 #define WORKER_H_
 
-#include <thread>
-#include <mutex>
-#include <condition_variable>
-#include <queue>
 #include <vector>
 #include "record.h"
+#include "blockingqueue.h"
 
-class BlockingQueue {
-  std::mutex *mtx;
-  std::condition_variable *cv;
-  std::queue<Record> q;
-  int max_size;
-  bool closed;
-
-  public:
-  explicit BlockingQueue(int size);
-  ~BlockingQueue();
-
-  // Non-copyable
-  BlockingQueue(const BlockingQueue&) = delete;
-  BlockingQueue& operator=(const BlockingQueue&) = delete;
-
-  // Move-constructable
-  BlockingQueue(BlockingQueue&& other);
-  BlockingQueue& operator=(BlockingQueue&& other);
-
-  void push(Record&& x);
-  Record pop();
-  void close();
-  bool isClosed();
-};
+#include <condition_variable>
 
 struct WorkerContext {
   std::condition_variable& cv;
