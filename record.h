@@ -2,6 +2,7 @@
 #define RECORD_H_
 
 #include <stdint.h>   // uint32_t
+#include <cmath>
 
 class Record {
   int used_bits;
@@ -22,7 +23,7 @@ class Record {
     : used_bits(0),
       sample_size_bits(sample_size_bits),
       reference(0),
-      samples(new char[sample_size_bits*n/8]) {}
+      samples(new char[(int) ceil(sample_size_bits*n/8.0)]) {}
   ~Record() { if (samples) delete samples; }
 
   // Move constructor
