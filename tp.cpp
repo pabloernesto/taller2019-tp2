@@ -1,5 +1,6 @@
 #include "worker.h"
 #include "writer.h"
+#include "inputfile.h"
 
 #include <iostream>
 #include <fstream>
@@ -9,8 +10,8 @@
 int main(int argc, char **argv) {
   if (argc == 1) return 1;
 
-  std::ifstream input(argv[4], std::ios::in | std::ios::binary);
-  if (!input) return 1;
+  std::ifstream input_file(argv[4], std::ios::in | std::ios::binary);
+  if (!input_file) return 1;
 
   std::ofstream output(argv[5], std::ios::out | std::ios::binary);
   if (!output) return 1;
@@ -19,9 +20,8 @@ int main(int argc, char **argv) {
   const int T = 1;
   const int Q = std::stol(argv[3]);
 
-  std::condition_variable cv;
-  std::mutex mtx;
-  struct WorkerContext ctx = { cv, mtx, input, N };
+  InputFile input(std::move(input_file));
+  struct WorkerContext ctx = { input, N };
 
   // Create worker threads and output queues
   std::vector<BlockingQueue> queues;

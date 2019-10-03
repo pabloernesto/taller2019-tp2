@@ -4,13 +4,12 @@
 #include <vector>
 #include "record.h"
 #include "blockingqueue.h"
+#include "inputfile.h"
 
 #include <condition_variable>
 
 struct WorkerContext {
-  std::condition_variable& cv;
-  std::mutex& lock;
-  std::ifstream& input;
+  InputFile& input;
   int N;
 };
 

@@ -21,14 +21,10 @@ void do_work(
   std::vector<BlockingQueue>& output_queue,
   WorkerContext& ctx)
 {
-  while (ctx.input.peek() != EOF) {
+  while (1) {
     // collect samples
-    std::vector<uint32_t> samples;
-    for (int i = 0; i < ctx.N; i++) {
-      uint32_t s;
-      ctx.input.read((char*) &s, sizeof(s));
-      samples.push_back(s);
-    }
+    auto samples = ctx.input.GetSamples(ctx.N, 0);
+    if (samples.size() == 0) break;
 
     // change to little endian
     std::transform(samples.begin(), samples.end(), samples.begin(),
