@@ -3,15 +3,20 @@
 
 #include <stdint.h>   // uint32_t
 #include <cmath>
+#include <fstream>    // ofstream
 
 class Record {
   int used_bits;
+  unsigned char sample_size_bits;
 
   public:
-  unsigned char sample_size_bits;
-  unsigned int reference;
+    unsigned int reference;
+
+  private:
+  int samples_buffer_size_bytes;
   char *samples;
 
+  public:
   // Non-copyable
   Record(const Record&) = delete;
   Record& operator=(const Record&) = delete;
@@ -30,6 +35,8 @@ class Record {
 
   // Append a (compressed) sample to the record
   void push_sample(uint32_t s);
+
+  void write_to(std::ofstream& out);
 };
 
 #endif // RECORD_H_

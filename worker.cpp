@@ -38,6 +38,10 @@ void do_work(
     std::transform(samples.begin(), samples.end(), samples.begin(),
       [reference](uint32_t num){ return num - reference; });
 
+    // if samples < N, pad with copies of the reference
+    while ((int) samples.size() < ctx.N)
+      samples.push_back(0);
+
     // find length in bits
     std::vector<int> bit_lengths(samples.size());
     std::transform(samples.begin(), samples.end(), bit_lengths.begin(),
