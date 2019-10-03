@@ -19,29 +19,14 @@ class Record {
   // No default constructor
   Record() = delete;
 
-  Record(int sample_size_bits, int n)
-    : used_bits(0),
-      sample_size_bits(sample_size_bits),
-      reference(0),
-      samples(new char[(int) ceil(sample_size_bits*n/8.0)]()) {}
+  Record(int sample_size_bits, int n);
   ~Record() { if (samples) delete samples; }
 
   // Move constructor
-  Record(Record&& other)
-    : used_bits(other.used_bits),
-      sample_size_bits(other.sample_size_bits),
-      reference(other.reference),
-      samples(other.samples) { other.samples = nullptr; }
+  Record(Record&& other);
 
   // Move assignment
-  Record& operator=(Record&& other) {
-    this->used_bits = other.used_bits;
-    this->reference = other.reference;
-    this->sample_size_bits = other.sample_size_bits;
-    this->samples = other.samples;
-    other.samples = nullptr;
-    return *this;
-  }
+  Record& operator=(Record&& other);
 
   // Append a (compressed) sample to the record
   void push_sample(uint32_t s);
