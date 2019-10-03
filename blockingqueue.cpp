@@ -36,6 +36,8 @@ BlockingQueue::~BlockingQueue() {
 
 void BlockingQueue::push(Record&& x) {
   std::unique_lock<std::mutex> lock(*mtx);
+  while (q.size() == max_size)
+    cv->wait(lock);
   q.push(std::move(x));
   cv->notify_one();
 }
