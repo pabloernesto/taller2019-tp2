@@ -1,5 +1,7 @@
 #include "inputfile.h"
 
+#include <vector>
+
 std::vector<uint32_t> InputFile::GetSamples(int n, int turn) {
   std::vector<uint32_t> result(n);
   auto data = result.data();

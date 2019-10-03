@@ -17,7 +17,7 @@ class InputFile {
   // No default constructor
   InputFile() = delete;
   // InputFile(std::ifstream&& in) : in(std::move(in)), mtx(), cv(), turn(0) {}
-  InputFile(std::ifstream&& in) : in(std::move(in)) {}
+  explicit InputFile(std::ifstream&& in) : in(std::move(in)) {}
 
   // Non-copyable
   InputFile(const InputFile&) = delete;
