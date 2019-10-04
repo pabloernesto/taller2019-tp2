@@ -6,13 +6,15 @@ Record::Record(int sample_size_bits, int n)
   : used_bits(0),
     sample_size_bits(sample_size_bits),
     reference(0),
-    samples(new char[(int) ceil(sample_size_bits*n/8.0)]())
+    samples_buffer_size_bytes((int) ceil(sample_size_bits*n/8.0)),
+    samples(new char[samples_buffer_size_bytes]())
 {}
 
 Record::Record(Record&& other)
   : used_bits(other.used_bits),
     sample_size_bits(other.sample_size_bits),
     reference(other.reference),
+    samples_buffer_size_bytes(other.samples_buffer_size_bytes),
     samples(other.samples)
 {
   other.samples = nullptr;
@@ -22,6 +24,7 @@ Record& Record::operator=(Record&& other) {
   this->used_bits = other.used_bits;
   this->reference = other.reference;
   this->sample_size_bits = other.sample_size_bits;
+  this->samples_buffer_size_bytes = other.samples_buffer_size_bytes;
   this->samples = other.samples;
   other.samples = nullptr;
   return *this;
@@ -40,4 +43,10 @@ void Record::push_sample(uint32_t s) {
     s <<= 8;
   }
   used_bits += sample_size_bits;
+}
+
+void Record::write_to(std::ofstream& out) {
+  out.write((char *) &reference, 4);
+  out.write((char *) &sample_size_bits, 1);
+  out.write((char *) samples, samples_buffer_size_bytes);
 }
