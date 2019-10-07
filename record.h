@@ -15,7 +15,7 @@ class Record {
 
   private:
   int samples_buffer_size_bytes;
-  std::unique_ptr<char> samples;
+  std::unique_ptr<char[]> samples;
 
   public:
   // Non-copyable
