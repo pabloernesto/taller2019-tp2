@@ -4,6 +4,7 @@
 #include <stdint.h>   // uint32_t
 #include <cmath>
 #include <fstream>    // ofstream
+#include <memory>     // unique_ptr
 
 class Record {
   int used_bits;
@@ -14,7 +15,7 @@ class Record {
 
   private:
   int samples_buffer_size_bytes;
-  char *samples;
+  std::unique_ptr<char> samples;
 
   public:
   // Non-copyable
@@ -25,7 +26,6 @@ class Record {
   Record() = delete;
 
   Record(int sample_size_bits, int n);
-  ~Record() { if (samples) delete samples; }
 
   // Move constructor
   Record(Record&& other);

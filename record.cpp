@@ -15,24 +15,21 @@ Record::Record(Record&& other)
     sample_size_bits(other.sample_size_bits),
     reference(other.reference),
     samples_buffer_size_bytes(other.samples_buffer_size_bytes),
-    samples(other.samples)
-{
-  other.samples = nullptr;
-}
+    samples(std::move(other.samples))
+{}
 
 Record& Record::operator=(Record&& other) {
   this->used_bits = other.used_bits;
   this->reference = other.reference;
   this->sample_size_bits = other.sample_size_bits;
   this->samples_buffer_size_bytes = other.samples_buffer_size_bytes;
-  this->samples = other.samples;
-  other.samples = nullptr;
+  this->samples = std::move(other.samples);
   return *this;
 }
 
 void Record::push_sample(uint32_t s) {
   // find current writing position
-  char *p = samples + used_bits / 8;
+  char *p = samples.get() + used_bits / 8;
 
   s <<= 8 * sizeof(s) - sample_size_bits; // significant bits at begining
   s >>= used_bits % 8;                    // align to last written bit
@@ -48,5 +45,5 @@ void Record::push_sample(uint32_t s) {
 void Record::write_to(std::ofstream& out) {
   out.write((char *) &reference, 4);
   out.write((char *) &sample_size_bits, 1);
-  out.write((char *) samples, samples_buffer_size_bytes);
+  out.write((char *) samples.get(), samples_buffer_size_bytes);
 }
