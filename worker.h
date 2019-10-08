@@ -8,14 +8,26 @@
 
 #include <condition_variable>
 
-struct WorkerContext {
+class Worker {
+  int thread_id;
+  std::vector<BlockingQueue>& output_queue;
   InputFile& input;
   int N;
-};
+  std::thread t;
 
-void do_work(
-  int thread_id,
-  std::vector<BlockingQueue>& output_queue,
-  WorkerContext& ctx);
+  public:
+  Worker() = delete;
+  Worker(int thread_id, std::vector<BlockingQueue>& output_queue,
+    InputFile& input, int N);
+
+  // Non-copyable
+  Worker(const Worker&) = delete;
+  Worker& operator=(const Worker&) = delete;
+
+  void Join();
+
+  private:
+  void do_work();
+};
 
 #endif // WORKER_H_
