@@ -4,7 +4,7 @@
 #include <mutex>    // mutex, unique_lock
 
 InputFile::InputFile(std::ifstream&& in, int T)
-  : in(std::move(in)), T(T)
+  : in(std::move(in)), T(T), mtx(), cv(), turn(0)
 {}
 
 std::vector<uint32_t> InputFile::GetSamples(int n, int thread) {
