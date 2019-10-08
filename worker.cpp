@@ -16,14 +16,23 @@
 //   https://github.com/freebsd/freebsd/blob/master/sys/libkern/fls.c
 static int fls(uint32_t i);
 
-void do_work(
-  int thread_id,
-  std::vector<BlockingQueue>& output_queue,
-  WorkerContext& ctx)
-{
+Worker::Worker(int thread_id, std::vector<BlockingQueue>& output_queue,
+  InputFile& input, int N)
+  : thread_id(thread_id),
+    output_queue(output_queue),
+    input(input),
+    N(N),
+    t(&Worker::do_work, this)
+{}
+
+void Worker::Join() {
+  t.join();
+}
+
+void Worker::do_work() {
   while (1) {
     // collect samples
-    auto samples = ctx.input.GetSamples(ctx.N, 0);
+    auto samples = input.GetSamples(N, 0);
     if (samples.size() == 0) break;
 
     // change to little endian
@@ -39,7 +48,7 @@ void do_work(
       [reference](uint32_t num){ return num - reference; });
 
     // if samples < N, pad with copies of the reference
-    while ((int) samples.size() < ctx.N)
+    while ((int) samples.size() < N)
       samples.push_back(0);
 
     // find length in bits
@@ -52,7 +61,7 @@ void do_work(
       bit_lengths.end(), 0, [](int a, int b){ return std::max(a, b); });
 
     // create record
-    Record r(max_bits, ctx.N);
+    Record r(max_bits, N);
     r.reference = htobe32(reference);
 
     // load samples
