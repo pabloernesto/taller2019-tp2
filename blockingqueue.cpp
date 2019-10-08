@@ -18,8 +18,6 @@ BlockingQueue::BlockingQueue(BlockingQueue&& other)
     closed(other.closed)
 {
   other.mtx = nullptr;
-  other.empty_cv = nullptr;
-  other.full_cv = nullptr;
 }
 
 BlockingQueue& BlockingQueue::operator=(BlockingQueue&& other) {
