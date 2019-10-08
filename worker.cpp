@@ -16,7 +16,8 @@
 //   https://github.com/freebsd/freebsd/blob/master/sys/libkern/fls.c
 static int fls(uint32_t i);
 
-Worker::Worker(int thread_id, std::vector<BlockingQueue>& output_queue,
+Worker::Worker(int thread_id,
+  std::vector<std::unique_ptr<BlockingQueue>>& output_queue,
   InputFile& input, int N)
   : thread_id(thread_id),
     output_queue(output_queue),
@@ -68,9 +69,9 @@ void Worker::do_work() {
     for (auto s : samples) r.push_sample(s);
 
     // push record into queue
-    output_queue[thread_id].push(std::move(r));
+    output_queue[thread_id]->push(std::move(r));
   }
-  output_queue[thread_id].close();
+  output_queue[thread_id]->close();
 }
 
 static int fls(uint32_t i) {

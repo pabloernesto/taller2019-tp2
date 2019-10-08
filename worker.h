@@ -10,14 +10,15 @@
 
 class Worker {
   int thread_id;
-  std::vector<BlockingQueue>& output_queue;
+  std::vector<std::unique_ptr<BlockingQueue>>& output_queue;
   InputFile& input;
   int N;
   std::thread t;
 
   public:
   Worker() = delete;
-  Worker(int thread_id, std::vector<BlockingQueue>& output_queue,
+  Worker(int thread_id,
+    std::vector<std::unique_ptr<BlockingQueue>>& output_queue,
     InputFile& input, int N);
 
   // Non-copyable

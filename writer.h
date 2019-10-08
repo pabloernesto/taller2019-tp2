@@ -8,6 +8,6 @@
 void do_write(
   int T,
   std::ofstream& output,
-  std::vector<BlockingQueue> &queues);
+  std::vector<std::unique_ptr<BlockingQueue>> &queues);
 
 #endif // WRITER_H_
