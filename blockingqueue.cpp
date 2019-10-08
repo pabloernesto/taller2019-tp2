@@ -7,6 +7,9 @@ void BlockingQueue::push(Record&& x) {
   std::unique_lock<std::mutex> lock(mtx);
   while (q.size() == max_size)
     full_cv.wait(lock);
+
+  if (closed) throw std::runtime_error("trying to push to a closed queue");
+
   q.push(std::move(x));
   empty_cv.notify_one();
 }
