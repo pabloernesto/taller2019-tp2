@@ -10,7 +10,7 @@
 
 class BlockingQueue {
   std::mutex *mtx;
-  std::condition_variable *cv;
+  std::condition_variable *empty_cv, *full_cv;
   std::queue<Record> q;
   size_t max_size;
   bool closed;
