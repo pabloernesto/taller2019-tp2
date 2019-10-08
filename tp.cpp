@@ -17,10 +17,10 @@ int main(int argc, char **argv) {
   if (!output) return 1;
 
   const int N = std::stol(argv[1]);
-  const int T = 1;
+  const int T = std::stol(argv[2]);
   const int Q = std::stol(argv[3]);
 
-  InputFile input(std::move(input_file));
+  InputFile input(std::move(input_file), T);
 
   // Create worker threads and output queues
   std::vector<BlockingQueue> queues;
@@ -31,7 +31,7 @@ int main(int argc, char **argv) {
   }
 
   // Create writer thread
-  std::thread writer(do_write, std::ref(output), std::ref(queues));
+  std::thread writer(do_write, T, std::ref(output), std::ref(queues));
 
   // Join all threads
   for (auto& T : workers) T->Join();

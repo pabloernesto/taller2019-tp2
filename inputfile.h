@@ -9,23 +9,23 @@
 
 class InputFile {
   std::ifstream in;
-  // std::mutex mtx;
-  // std::condition_variable cv;
-  // int turn;
+  int T;
+  std::mutex mtx;
+  std::condition_variable cv;
+  int turn;
 
   public:
   // No default constructor
   InputFile() = delete;
-  // InputFile(std::ifstream&& in) : in(std::move(in)), mtx(), cv(), turn(0) {}
-  explicit InputFile(std::ifstream&& in) : in(std::move(in)) {}
+  InputFile(std::ifstream&& in, int T);
 
   // Non-copyable
   InputFile(const InputFile&) = delete;
   InputFile& operator=(const InputFile&) = delete;
 
   // Get (up to) n samples from the file
-  // Calling thread must identify itself with its turn number
-  std::vector<uint32_t> GetSamples(int n, int turn);
+  // Calling thread must identify itself with its thread-id
+  std::vector<uint32_t> GetSamples(int n, int thread);
 };
 
 #endif // INPUTFILE_H_

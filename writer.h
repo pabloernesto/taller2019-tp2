@@ -6,6 +6,7 @@
 #include <vector>
 
 void do_write(
+  int T,
   std::ofstream& output,
   std::vector<BlockingQueue> &queues);
 
