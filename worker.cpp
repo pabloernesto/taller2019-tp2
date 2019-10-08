@@ -32,7 +32,7 @@ void Worker::Join() {
 void Worker::do_work() {
   while (1) {
     // collect samples
-    auto samples = input.GetSamples(N, 0);
+    auto samples = input.GetSamples(N, thread_id);
     if (samples.size() == 0) break;
 
     // change to little endian
