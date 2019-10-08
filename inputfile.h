@@ -24,8 +24,8 @@ class InputFile {
   InputFile& operator=(const InputFile&) = delete;
 
   // Get (up to) n samples from the file
-  // Calling thread must identify itself with its turn number
-  std::vector<uint32_t> GetSamples(int n, int turn);
+  // Calling thread must identify itself with its thread-id
+  std::vector<uint32_t> GetSamples(int n, int thread);
 };
 
 #endif // INPUTFILE_H_
