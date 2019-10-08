@@ -1,11 +1,12 @@
-#include "worker.h"
-#include "writer.h"
-#include "inputfile.h"
-
+#include <thread>
 #include <iostream>
 #include <fstream>
 #include <vector>
 #include <string>
+
+#include "worker.h"
+#include "writer.h"
+#include "inputfile.h"
 
 int main(int argc, char **argv) {
   if (argc == 1) return 1;
@@ -23,10 +24,10 @@ int main(int argc, char **argv) {
   InputFile input(std::move(input_file), T);
 
   // Create worker threads and output queues
-  std::vector<BlockingQueue> queues;
+  std::vector<std::unique_ptr<BlockingQueue>> queues;
   std::vector<std::unique_ptr<Worker>> workers;
   for (int i = 0; i < T; i++) {
-    queues.emplace_back(Q);
+    queues.emplace_back(new BlockingQueue(Q));
     workers.emplace_back(new Worker(i, queues, input, N));
   }
 
