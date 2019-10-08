@@ -66,6 +66,5 @@ bool BlockingQueue::isClosed() {
   while ((q.size() == 0) && !closed)
     cv->wait(lock);
 
-  cv->notify_one();
   return (q.size() == 0) && closed;
 }
