@@ -7,17 +7,17 @@
 #include <mutex>
 #include <condition_variable>
 #include <queue>
+#include <memory>     // unique_ptr
 
 class BlockingQueue {
   std::mutex *mtx;
-  std::condition_variable *empty_cv, *full_cv;
+  std::unique_ptr<std::condition_variable> empty_cv, full_cv;
   std::queue<Record> q;
   size_t max_size;
   bool closed;
 
   public:
   explicit BlockingQueue(int size);
-  ~BlockingQueue();
 
   // Non-copyable
   BlockingQueue(const BlockingQueue&) = delete;

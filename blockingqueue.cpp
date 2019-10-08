@@ -11,8 +11,8 @@ BlockingQueue::BlockingQueue(int size)
 
 BlockingQueue::BlockingQueue(BlockingQueue&& other)
   : mtx(other.mtx),
-    empty_cv(other.empty_cv),
-    full_cv(other.full_cv),
+    empty_cv(std::move(other.empty_cv)),
+    full_cv(std::move(other.full_cv)),
     q(std::move(other.q)),
     max_size(other.max_size),
     closed(other.closed)
@@ -25,19 +25,11 @@ BlockingQueue::BlockingQueue(BlockingQueue&& other)
 BlockingQueue& BlockingQueue::operator=(BlockingQueue&& other) {
   this->mtx = other.mtx;
   other.mtx = nullptr;
-  this->empty_cv = other.empty_cv;
-  other.empty_cv = nullptr;
-  this->full_cv = other.full_cv;
-  other.full_cv = nullptr;
+  this->empty_cv = std::move(other.empty_cv);
+  this->full_cv = std::move(other.full_cv);
   this->q = std::move(other.q);
   this->max_size = other.max_size;
   return *this;
-}
-
-BlockingQueue::~BlockingQueue() {
-  if (this->mtx) delete(this->mtx);
-  if (this->empty_cv) delete(this->empty_cv);
-  if (this->full_cv) delete(this->full_cv);
 }
 
 void BlockingQueue::push(Record&& x) {
