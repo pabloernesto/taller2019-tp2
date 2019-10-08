@@ -30,7 +30,7 @@ class BlockingQueue {
   void push(Record&& x);
   Record pop();
   void close();
-  bool isClosed();
+  bool isPopable();
 };
 
 #endif // BLOCKINGQUEUE_H_

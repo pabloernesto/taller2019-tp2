@@ -61,10 +61,10 @@ void BlockingQueue::close() {
   cv->notify_one();
 }
 
-bool BlockingQueue::isClosed() {
+bool BlockingQueue::isPopable() {
   std::unique_lock<std::mutex> lock(*mtx);
   while ((q.size() == 0) && !closed)
     cv->wait(lock);
 
-  return (q.size() == 0) && closed;
+  return q.size() != 0;
 }

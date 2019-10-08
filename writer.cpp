@@ -7,7 +7,7 @@ void do_write(
   std::ofstream& output,
   std::vector<BlockingQueue> &queues)
 {
-  for (int worker = 0; !queues[worker].isClosed(); worker = (worker + 1) % T) {
+  for (int worker = 0; queues[worker].isPopable(); worker = (worker + 1) % T) {
     Record&& r = queues[worker].pop();
     r.write_to(output);
   }
