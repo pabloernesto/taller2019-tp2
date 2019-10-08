@@ -10,7 +10,7 @@
 #include <memory>     // unique_ptr
 
 class BlockingQueue {
-  std::mutex *mtx;
+  std::unique_ptr<std::mutex> mtx;
   std::unique_ptr<std::condition_variable> empty_cv, full_cv;
   std::queue<Record> q;
   size_t max_size;
