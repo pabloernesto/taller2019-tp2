@@ -1,4 +1,4 @@
-# 01_a_lot_of_numbers
+# lot_of_numbers_multithreaded
 ./tp 4 2 1 $folder/alot $folder/alot4.out
 ret=$?
 
