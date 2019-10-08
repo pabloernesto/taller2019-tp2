@@ -9,15 +9,15 @@
 
 class InputFile {
   std::ifstream in;
-  // std::mutex mtx;
-  // std::condition_variable cv;
-  // int turn;
+  int T;
+  std::mutex mtx;
+  std::condition_variable cv;
+  int turn;
 
   public:
   // No default constructor
   InputFile() = delete;
-  // InputFile(std::ifstream&& in) : in(std::move(in)), mtx(), cv(), turn(0) {}
-  explicit InputFile(std::ifstream&& in) : in(std::move(in)) {}
+  InputFile(std::ifstream&& in, int T);
 
   // Non-copyable
   InputFile(const InputFile&) = delete;

@@ -20,7 +20,7 @@ int main(int argc, char **argv) {
   const int T = std::stol(argv[2]);
   const int Q = std::stol(argv[3]);
 
-  InputFile input(std::move(input_file));
+  InputFile input(std::move(input_file), T);
 
   // Create worker threads and output queues
   std::vector<BlockingQueue> queues;
