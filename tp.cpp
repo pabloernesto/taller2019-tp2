@@ -34,6 +34,6 @@ int main(int argc, char **argv) {
   std::thread writer(do_write, T, std::ref(output), std::ref(queues));
 
   // Join all threads
-  for (auto& T : workers) T->Join();
+  for (auto& w : workers) w->Join();
   writer.join();
 }
