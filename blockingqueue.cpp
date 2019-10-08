@@ -11,7 +11,7 @@ void BlockingQueue::push(Record&& x) {
   if (closed) throw std::runtime_error("trying to push to a closed queue");
 
   q.push(std::move(x));
-  empty_cv.notify_one();
+  empty_cv.notify_all();
 }
 
 Record BlockingQueue::pop() {
@@ -23,14 +23,14 @@ Record BlockingQueue::pop() {
 
   Record result = std::move(q.front());
   q.pop();
-  full_cv.notify_one();
+  full_cv.notify_all();
   return result;
 }
 
 void BlockingQueue::close() {
   std::unique_lock<std::mutex> lock(mtx);
   closed = true;
-  empty_cv.notify_one();
+  empty_cv.notify_all();
 }
 
 bool BlockingQueue::isPopable() {
