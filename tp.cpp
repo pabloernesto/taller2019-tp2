@@ -31,7 +31,7 @@ int main(int argc, char **argv) {
   }
 
   // Create writer thread
-  std::thread writer(do_write, std::ref(output), std::ref(queues));
+  std::thread writer(do_write, T, std::ref(output), std::ref(queues));
 
   // Join all threads
   for (auto& T : workers) T->Join();
